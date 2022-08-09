@@ -9,9 +9,18 @@ import { accountRouter } from './routes';
 const app = express();
 
 // Extact environment variables.
-const { APIV, NODE_ENV, PORT, ORIGIN } = process.env;
+const { APIV, NODE_ENV, PORT, ORIGIN, SENDGRID_KEY, EMAIL_FROM } = process.env;
 
-console.log('node env', NODE_ENV);
+// Check environment variables.
+if (!SENDGRID_KEY) {
+  console.error('Please set the SENDGRID_KEY.');
+  process.exit(1);
+}
+if (!EMAIL_FROM) {
+  console.error('Please set the EMAIL_FROM.');
+  process.exit(1);
+}
+
 // In production, CORS is not needed...
 if (NODE_ENV === 'development')
   app.use(cors({ origin: ORIGIN, credentials: true }));
