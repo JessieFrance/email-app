@@ -1,4 +1,5 @@
 import express from 'express';
+import { Pool, PoolConfig } from 'pg';
 import 'express-async-errors';
 import cors from 'cors';
 import { json } from 'body-parser';
@@ -9,7 +10,17 @@ import { accountRouter } from './routes';
 const app = express();
 
 // Extact environment variables.
-const { APIV, NODE_ENV, PORT, ORIGIN, SENDGRID_KEY, EMAIL_FROM } = process.env;
+const {
+  APIV,
+  NODE_ENV,
+  PORT,
+  ORIGIN,
+  SENDGRID_KEY,
+  EMAIL_FROM,
+  POSTGRES_USER,
+  POSTGRES_DB,
+  POSTGRES_PASSWORD,
+} = process.env;
 
 // Check environment variables.
 if (!SENDGRID_KEY) {
@@ -18,6 +29,18 @@ if (!SENDGRID_KEY) {
 }
 if (!EMAIL_FROM) {
   console.error('Please set the EMAIL_FROM.');
+  process.exit(1);
+}
+if (!POSTGRES_USER) {
+  console.error('Please set the POSTGRES_USER.');
+  process.exit(1);
+}
+if (!POSTGRES_DB) {
+  console.error('Please set the POSTGRES_DB.');
+  process.exit(1);
+}
+if (!POSTGRES_PASSWORD) {
+  console.error('Please set the POSTGRES_PASSWORD.');
   process.exit(1);
 }
 
@@ -38,5 +61,16 @@ if (NODE_ENV === 'production') {
   app.use(prodPrepend, accountRouter);
 }
 
+// Set up database pool.
+const cfg: PoolConfig = {
+  user: POSTGRES_USER,
+  password: POSTGRES_PASSWORD,
+  database: POSTGRES_DB,
+  host: 'localhost',
+  port: 5432,
+};
+
+const pool = new Pool(cfg);
+
 // Export stuff.
-export { app, NODE_ENV, PORT, ORIGIN };
+export { app, NODE_ENV, PORT, ORIGIN, pool };

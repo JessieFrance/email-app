@@ -3,3 +3,5 @@ node_modules
 dist
 coverage/
 *.git*
+docker-compose.yml
+bin/
