@@ -41,6 +41,18 @@ class AccountTable {
       );
     });
   }
+
+  static getAccountEmails() {
+    return new Promise((resolve, reject) => {
+      pool.query(
+        `SELECT id, email FROM account`,
+        (error: any, response: any) => {
+          if (error) return reject(error);
+          return resolve({ accountEmails: response.rows });
+        }
+      );
+    });
+  }
 }
 
 export default AccountTable;
