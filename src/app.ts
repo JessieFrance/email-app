@@ -73,4 +73,4 @@ const cfg: PoolConfig = {
 const pool = new Pool(cfg);
 
 // Export stuff.
-export { app, NODE_ENV, PORT, ORIGIN, pool };
+export { app, NODE_ENV, PORT, ORIGIN, pool, EMAIL_FROM, SENDGRID_KEY };
