@@ -9,9 +9,6 @@ import { accountRouter } from './routes';
 // Initialize.
 const app = express();
 
-// Total number of messages.
-const NUMBER_MESSAGES = 10;
-
 // Extact environment variables.
 const {
   APIV,
@@ -76,4 +73,4 @@ const cfg: PoolConfig = {
 const pool = new Pool(cfg);
 
 // Export stuff.
-export { app, NODE_ENV, PORT, ORIGIN, pool, NUMBER_MESSAGES };
+export { app, NODE_ENV, PORT, ORIGIN, pool };
