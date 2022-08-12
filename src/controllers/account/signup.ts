@@ -55,7 +55,7 @@ export const signup = async (req: Request, res: Response) => {
   // Initialize the account messages for this user.
   // For now, take advantage of the fact that Postgres numbers
   // the message id values incrementally starting at 1.
-  for (let i = 1; i < NUMBER_MESSAGES; i++) {
+  for (let i = 1; i <= NUMBER_MESSAGES; i++) {
     try {
       await AccountMessageTable.storeAccountMessage({
         accountId: id,

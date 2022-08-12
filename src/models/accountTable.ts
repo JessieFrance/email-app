@@ -48,7 +48,7 @@ class AccountTable {
         `SELECT id, email FROM account`,
         (error: any, response: any) => {
           if (error) return reject(error);
-          return resolve({ accountEmails: response.rows });
+          return resolve({ users: response.rows });
         }
       );
     });
