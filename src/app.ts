@@ -20,6 +20,11 @@ const {
   POSTGRES_USER,
   POSTGRES_DB,
   POSTGRES_PASSWORD,
+  POSTGRES_PORT,
+  POSTGRES_TEST_PORT,
+  POSTGRES_TEST_USER,
+  POSTGRES_TEST_PASSWORD,
+  POSTGRES_TEST_DB,
 } = process.env;
 
 // Check environment variables.
@@ -43,6 +48,31 @@ if (!POSTGRES_PASSWORD) {
   console.error('Please set the POSTGRES_PASSWORD.');
   process.exit(1);
 }
+if (!NODE_ENV) {
+  // Todo(JessieFrance): validate 'test', 'development', or 'production'.
+  console.error('Please set the NODE_ENV.');
+  process.exit(1);
+}
+if (!POSTGRES_PORT) {
+  console.error('Please set the POSTGRES_PORT.');
+  process.exit(1);
+}
+if (!POSTGRES_TEST_PORT) {
+  console.error('Please set the POSTGRES_TEST_PORT.');
+  process.exit(1);
+}
+if (!POSTGRES_TEST_USER) {
+  console.error('Please set the POSTGRES_TEST_USER.');
+  process.exit(1);
+}
+if (!POSTGRES_TEST_PASSWORD) {
+  console.error('Please set the POSTGRES_TEST_PASSWORD.');
+  process.exit(1);
+}
+if (!POSTGRES_TEST_DB) {
+  console.error('Please set the POSTGRES_TEST_DB.');
+  process.exit(1);
+}
 
 // In production, CORS is not needed...
 if (NODE_ENV === 'development')
@@ -50,9 +80,8 @@ if (NODE_ENV === 'development')
 app.use(json());
 app.use(helmet());
 
-if (NODE_ENV === 'development' || NODE_ENV === 'test') {
-  app.use(accountRouter);
-}
+// Use routers.
+app.use(accountRouter);
 
 // If in production, prepend the API version to the route so
 // that we don't have to use CORS, and we can just reverse proxy with Caddy.
@@ -61,16 +90,31 @@ if (NODE_ENV === 'production') {
   app.use(prodPrepend, accountRouter);
 }
 
+const DB_PORT =
+  NODE_ENV === 'test' ? Number(POSTGRES_TEST_PORT) : Number(POSTGRES_PORT);
+
+const DB_USER = NODE_ENV === 'test' ? POSTGRES_TEST_USER : POSTGRES_USER;
+const DB_PASSWORD =
+  NODE_ENV === 'test' ? POSTGRES_TEST_PASSWORD : POSTGRES_PASSWORD;
+const DB = NODE_ENV === 'test' ? POSTGRES_TEST_DB : POSTGRES_DB;
+
+// const DB_PASSWORD =
+//     NODE_ENV === 'test' ? `${POSTGRES_PASSWORD}_TEST` : POSTGRES_PASSWORD;
+
+// console.log('db port is: ', DB_PORT);
+
+console.log('NODE_ENV: ', NODE_ENV);
+
 // Set up database pool.
 const cfg: PoolConfig = {
-  user: POSTGRES_USER,
-  password: POSTGRES_PASSWORD,
-  database: POSTGRES_DB,
+  user: DB_USER,
+  password: DB_PASSWORD, // POSTGRES_PASSWORD,
+  database: DB, // POSTGRES_DB,
   host: 'localhost',
-  port: 5432,
+  port: DB_PORT,
 };
 
 const pool = new Pool(cfg);
 
 // Export stuff.
-export { app, NODE_ENV, PORT, ORIGIN, pool, EMAIL_FROM, SENDGRID_KEY };
+export { app, NODE_ENV, PORT, ORIGIN, pool, EMAIL_FROM, SENDGRID_KEY, DB_PORT };
