@@ -74,6 +74,19 @@ class AccountMessageTable {
       );
     });
   }
+
+  static deleteByAccountId({ accountId }: { accountId: string }) {
+    return new Promise((resolve, reject) => {
+      pool.query(
+        `DELETE FROM account_message WHERE account_id=$1`,
+        [accountId],
+        (error: any, response: any) => {
+          if (error) return reject(error);
+          return resolve({ users: response.rows });
+        }
+      );
+    });
+  }
 }
 
 export default AccountMessageTable;

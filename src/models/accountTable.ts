@@ -53,6 +53,19 @@ class AccountTable {
       );
     });
   }
+
+  static deleteById({ id }: { id: string }) {
+    return new Promise((resolve, reject) => {
+      pool.query(
+        `DELETE FROM account WHERE id=$1`,
+        [id],
+        (error: any, response: any) => {
+          if (error) return reject(error);
+          return resolve({ users: response.rows });
+        }
+      );
+    });
+  }
 }
 
 export default AccountTable;
