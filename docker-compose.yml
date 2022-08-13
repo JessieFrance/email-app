@@ -1,5 +1,7 @@
 version: '3'
+
 services:
+
   postgres:
     image: postgres:12
     container_name: postgres
@@ -8,6 +10,19 @@ services:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     ports:
-      - '5432:5432'
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - ./bin/sql/docker/01_init.sql:/docker-entrypoint-initdb.d/init.sql
+
+
+  postgres-test:
+    image: postgres:12
+    container_name: postgres-test
+    environment:
+      POSTGRES_USER: "${POSTGRES_TEST_USER}"
+      POSTGRES_DB: "${POSTGRES_TEST_DB}"
+      POSTGRES_PASSWORD: "${POSTGRES_TEST_PASSWORD}"
+    ports:
+      - ${POSTGRES_TEST_PORT}:5432
     volumes:
       - ./bin/sql/docker/01_init.sql:/docker-entrypoint-initdb.d/init.sql
