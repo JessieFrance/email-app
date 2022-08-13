@@ -1,0 +1,38 @@
+name: Build and Test
+
+on:
+  push:
+    branches: # Run actions when code is committed to main branch
+      - main
+  pull_request:
+    branches: # Run actions when a PR is pushed based on main branch
+      - main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [16.x]        
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Setup Node Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run lint
+        run: npm run lint
+      - name: Create fake environment file
+        run: cp .env_sample .env
+      - name: Run docker compose
+        run: docker-compose up -d
+      - name: Run tests
+        run: npm run test
+      - name: Run build
+        run: npm run build	
