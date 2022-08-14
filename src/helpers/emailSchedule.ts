@@ -5,80 +5,25 @@ import AccountMessageTable from '../models/accountMessageTable';
 import Email from './email';
 import MessageTable from '../models/messageTable';
 import { EMAIL_FROM } from '../app';
+import {
+  isAccountMessageArray,
+  isMessageArray,
+  isUserArray,
+  Message,
+} from './typeChecks';
 
-interface User {
-  id: string | number;
-  email: string;
-}
-
-// This interface uses snake casing because of SQL convention.
-// Should update SQL to use camel casing here...
-interface AccountMessage {
-  account_id: number;
-  message_id: number;
-  used: boolean;
-}
-
-interface Message {
-  id: number;
-  subject: string;
-  content: string;
-}
-
-const isUser = (item: any): item is User => {
-  if (item && item.id && item.email) {
-    const { id, email } = item;
-    if (typeof id === 'string' || typeof id === 'number') {
-      return typeof email === 'string';
-    }
-  }
-  return false;
-};
-
-const isAccountMessage = (item: any): item is AccountMessage => {
-  if (item && item.account_id && item.message_id && 'used' in item) {
-    const { account_id, message_id, used } = item;
-    // console.log('account_id type: ', typeof account_id);
-    // console.log('message_id type: ', typeof message_id);
-    // console.log('used type: ', typeof used);
-
-    return (
-      typeof account_id === 'number' &&
-      typeof message_id === 'number' &&
-      typeof used === 'boolean'
-    );
-  }
-  console.log('i am here');
-  return false;
-};
-
-const isMessage = (item: any): item is Message => {
-  if (item && item.id && item.subject && item.content) {
-    const { id, subject, content } = item;
-    return (
-      typeof id === 'number' &&
-      typeof subject === 'string' &&
-      typeof content === 'string'
-    );
-  }
-  return false;
-};
-
-/* Returns true if arr is an empty array or if all items are of type User */
-const isUserArray = (arr: any): arr is User[] =>
-  Array.isArray(arr) && arr.every((item) => isUser(item));
-/* Returns true if arr is an empty array or if all items are of type AcccountMessage */
-const isAccountMessageArray = (arr: any): arr is AccountMessage[] =>
-  Array.isArray(arr) && arr.every((item) => isAccountMessage(item));
-/* Returns true if arr is an empty array or if all items are of type Message */
-const isMessageArray = (arr: any): arr is Message[] =>
-  Array.isArray(arr) && arr.every((item) => isMessage(item));
-
+/**
+ * Loads messages from database.
+ *
+ * @returns - Promise<Message[]>. Promise that resolves with an array of messages form database.
+ *
+ */
 const loadMessages = async () => {
   const { messages } = (await MessageTable.getMessages()) as any;
   return isMessageArray(messages) ? messages : [];
 };
 
+/* EmailSchedule class */
 class EmailSchedule {
   cronJob: CronJob;
 
@@ -86,6 +31,14 @@ class EmailSchedule {
 
   email: Email;
 
+  /**
+   * Initializes the email scheduler with the SendGrid key, and starts sending emails
+   * using Linux style cron job.
+   *
+   * @param apiKey  - String for SendGrid key.
+   * @returns - Promise<void>.
+   *
+   */
   constructor(apiKey: string) {
     this.cronJob = new CronJob(`*/${EMAIL_FREQUENCY} * * * * *`, async () => {
       try {
@@ -104,6 +57,12 @@ class EmailSchedule {
     this.email = new Email(apiKey);
   }
 
+  /**
+   * Starts the email scheduler
+   *
+   * @returns - Promise<void>.
+   *
+   */
   async start(): Promise<void> {
     this.messages = await loadMessages();
     // Start cron job.
@@ -112,8 +71,13 @@ class EmailSchedule {
     }
   }
 
+  /**
+   * Sends the emails
+   *
+   * @returns - Promise<void>.
+   *
+   */
   async sendEmails(): Promise<void> {
-    console.log('messages are: ', this.messages);
     const { users } = (await AccountTable.getAccountEmails()) as any;
 
     // Type check....

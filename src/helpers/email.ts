@@ -1,12 +1,28 @@
 /* eslint-disable class-methods-use-this */
 import sgMail from '@sendgrid/mail';
 
-/*  Wrapper class for sendgrid. */
+/*  Wrapper class for SendGrid. */
 class Email {
+  /**
+   * Initializes SendGrid library with API key.
+   * @param apiKey  - SendGrid API key.
+   * @returns - Promise<void>.
+   *
+   */
   constructor(apiKey: string) {
     sgMail.setApiKey(apiKey);
   }
 
+  /**
+   * This function sends an email using SendGrid.
+   *
+   * @param from  - Sender email addresss.
+   * @param to  - Recipient email addresss.
+   * @param subject  - Email subject.
+   * @param html  - Email content as html.
+   * @returns - Promise<void>. It sends an email, or logs an error.
+   *
+   */
   async sendEmail({
     from,
     to,
