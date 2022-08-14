@@ -26,7 +26,7 @@ Copy the `.env_sample` file in the root directory of this project to a new `.env
 
 After completing the prerequisites above, you should be ready to run the application in three steps: 
 
-1. Install dependencies with `npm ci`.
+1. Install dependencies with `npm ci`. If you encounter any issues here but you have `node` installed, it may be a result of your Node.js version (type `node -v` in the terminal to check), as this project was developed using Node.js version `v16.14.0`. To change Node.js version to the one in this project, you can use the [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm) package.
 
 2. Start the development and test databases with `docker-compose up -d`. This creates two Docker containers named `postgres` and `postgres-test` which are both initialized with ten hardcoded email messages at startup. If you get any errors at this step, please check that (A) you have correctly installed Docker and Docker Compose, and (B) you do not have a firewall or some other process blocking ports 5433 and 5434 (or whatever ports you have chosen in `.env`).
 
