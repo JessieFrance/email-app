@@ -1,5 +1,5 @@
 import { app, PORT, SENDGRID_KEY } from './app';
-import EmailSchedule from './helpers/scheduleMail';
+import EmailSchedule from './helpers/emailSchedule';
 
 // Start the email scheduler.
 const emailSchedule = new EmailSchedule(String(SENDGRID_KEY));

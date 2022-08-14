@@ -13,7 +13,6 @@ export const signup = async (req: Request, res: Response) => {
     // Return with bad request if user exists.
     const existingUser = await AccountTable.getAccount({ email });
     if (existingUser) {
-      console.log('user exists!!!');
       res.status(400).send({
         message: 'User already in use',
       });
