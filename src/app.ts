@@ -98,13 +98,6 @@ const DB_PASSWORD =
   NODE_ENV === 'test' ? POSTGRES_TEST_PASSWORD : POSTGRES_PASSWORD;
 const DB = NODE_ENV === 'test' ? POSTGRES_TEST_DB : POSTGRES_DB;
 
-// const DB_PASSWORD =
-//     NODE_ENV === 'test' ? `${POSTGRES_PASSWORD}_TEST` : POSTGRES_PASSWORD;
-
-// console.log('db port is: ', DB_PORT);
-
-console.log('NODE_ENV: ', NODE_ENV);
-
 // Set up database pool.
 const cfg: PoolConfig = {
   user: DB_USER,

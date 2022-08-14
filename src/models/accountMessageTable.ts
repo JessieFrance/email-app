@@ -1,6 +1,16 @@
 import { pool } from '../app';
 
+/* Class that relates account to message */
 class AccountMessageTable {
+  /**
+   * Stores an account message.
+   *
+   * @param accountId - Account id
+   * @param messageId - Message id
+   * @param used - Boolean that says if message has been used or not
+   * @returns - Promise<void>.
+   *
+   */
   static storeAccountMessage({
     accountId,
     messageId,
@@ -22,6 +32,15 @@ class AccountMessageTable {
     });
   }
 
+  /**
+   * Updates an account message used status
+   *
+   * @param accountId - Account id
+   * @param messageId - Message id
+   * @param used - Boolean that says if message has been used or not
+   * @returns - Promise<void>.
+   *
+   */
   static updateUsed({
     accountId,
     messageId,
@@ -44,6 +63,17 @@ class AccountMessageTable {
     });
   }
 
+  /**
+   * Retrieves account messages
+   * @remarks
+   * Need to validate return type is account message array
+   *
+   * @param accountId - Account id
+   * @param messageId - Message id
+   * @param used - Boolean that says if message has been used or not
+   * @returns - Promise<unknown>. An account message array from the database
+   *
+   */
   static getAccountMessages() {
     return new Promise((resolve, reject) => {
       pool.query(
@@ -56,6 +86,16 @@ class AccountMessageTable {
     });
   }
 
+  /**
+   * Retrieves filtered account messages
+   * @remarks
+   * Need to validate return type is account message array
+   *
+   * @param accountId - Account id
+   * @param used - Boolean that says if message has been used or not
+   * @returns - Promise<unknown>. An account message array from the database
+   *
+   */
   static getFilteredAccountMessages({
     accountId,
     used,
@@ -75,6 +115,13 @@ class AccountMessageTable {
     });
   }
 
+  /**
+   * Deletes an account message by account id
+   *
+   * @param accountId - Account id
+   * @returns - Promise<void>.
+   *
+   */
   static deleteByAccountId({ accountId }: { accountId: string }) {
     return new Promise((resolve, reject) => {
       pool.query(

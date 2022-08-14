@@ -1,6 +1,15 @@
 import { pool } from '../app';
 
+/* Class for account */
 class AccountTable {
+  /**
+   * Stores an account.
+   *
+   * @param email - account email
+   * @param hashedPassword - hashed password
+   * @returns - Promise<string>. id of stored account
+   *
+   */
   static storeAccount({
     email,
     hashedPassword,
@@ -29,6 +38,13 @@ class AccountTable {
     });
   }
 
+  /**
+   * Retrieves an account by email
+   *
+   * @param email - account email
+   * @returns - Promise<unknown>. An account
+   *
+   */
   static getAccount({ email }: { email: string }) {
     return new Promise((resolve, reject) => {
       pool.query(
@@ -42,6 +58,12 @@ class AccountTable {
     });
   }
 
+  /**
+   * Retrieves an array of accounts, containing only email (and id) field
+   *
+   * @returns - Promise<unknown>. An array of account
+   *
+   */
   static getAccountEmails() {
     return new Promise((resolve, reject) => {
       pool.query(
@@ -54,16 +76,19 @@ class AccountTable {
     });
   }
 
-  static deleteById({ id }: { id: string }) {
+  /**
+   * Deletes an account by id
+   *
+   * @param id - Account id
+   * @returns - Promise<void>.
+   *
+   */
+  static deleteById({ id }: { id: string }): Promise<void> {
     return new Promise((resolve, reject) => {
-      pool.query(
-        `DELETE FROM account WHERE id=$1`,
-        [id],
-        (error: any, response: any) => {
-          if (error) return reject(error);
-          return resolve({ users: response.rows });
-        }
-      );
+      pool.query(`DELETE FROM account WHERE id=$1`, [id], (error: any) => {
+        if (error) return reject(error);
+        return resolve();
+      });
     });
   }
 }
