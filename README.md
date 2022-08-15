@@ -1,8 +1,8 @@
-# Cope Notes Email App Backend
+# Email App
 
-[![Actions Status](https://github.com/JessieFrance/cope-notes-email-app/workflows/Build%20and%20Test/badge.svg)](https://github.com/JessieFrance/cope-notes-email-app/actions)
+[![Actions Status](https://github.com/JessieFrance/email-app/workflows/Build%20and%20Test/badge.svg)](https://github.com/JessieFrance/email-app/actions)
 
-This is the backend API for for an email scheduling application. This application lets users sign up, and receive ten automated, hardcoded emails (in random order) using [SendGrid](https://sendgrid.com/).
+This is the backend API for for an experimental email scheduling application. This application lets users sign up, and receive ten automated, hardcoded emails (in random order) using [SendGrid](https://sendgrid.com/).
 
 ## How to Run the App
 
@@ -20,21 +20,23 @@ With the email address you have chosen, you need to sign up for a free [SendGrid
 
 #### Create the `.env` File
 
-Copy the `.env_sample` file in the root directory of this project to a new `.env`. Open the `.env` file, and change `EMAIL_FROM` and `SENDGRID_KEY` to your chosen email, and corresponding SendGrid API key from the values you obtained in the previous step. You can optionally change the "POSTGRES" user and password variables (or just keep them, since this is not in production). If you want to use the [frontend user interface](https://github.com/JessieFrance/cope-notes-frontend), then do not change the `PORT` or `ORIGIN` variables.
+Copy the `.env_sample` file in the root directory of this project to a new `.env`. Open the `.env` file, and change `EMAIL_FROM` and `SENDGRID_KEY` to your chosen email, and corresponding SendGrid API key from the values you obtained in the previous step. You can optionally change the "POSTGRES" user and password variables (or just keep them, since this is not in production). If you want to use the [frontend user interface](https://github.com/JessieFrance/email-app-frontend), then do not change the `PORT` or `ORIGIN` variables.
 
 ### Running the Application
 
-After completing the prerequisites above, you should be ready to run the application in three steps: 
+After completing the prerequisites above, you should be ready to run the application in four steps:
 
-1. Install dependencies with `npm ci`. If you encounter any issues here but you have `node` installed, it may be a result of your Node.js version (type `node -v` in the terminal to check), as this project was developed using Node.js version `v16.14.0`. To change Node.js version to the one in this project, you can use the [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm) package.
+1. Clone this repository to your local machine.
 
-2. Start the development and test databases with `docker-compose up -d`. This creates two Docker containers named `postgres` and `postgres-test` which are both initialized with ten hardcoded email messages at startup. If you get any errors at this step, please check that (A) you have correctly installed Docker and Docker Compose, and (B) you do not have a firewall or some other process blocking ports 5433 and 5434 (or whatever ports you have chosen in `.env`).
+2. Install dependencies with `npm ci`. If you encounter any issues here but you have `node` installed, it may be a result of your Node.js version (type `node -v` in the terminal to check), as this project was developed using Node.js version `v16.14.0`. To change the Node.js version to the one in this project, you can use the [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm) package.
 
-3. Run the application with `npm run dev`. You can also (in another terminal) test the application with `npm test`.
+3. Start the development and test databases with `docker-compose up -d`. This creates two Docker containers named `postgres` and `postgres-test` which are both initialized with ten hardcoded email messages at startup. If you get any errors at this step, please check that (A) you have correctly installed Docker and Docker Compose, and (B) you do not have a firewall or some other process blocking ports 5433 and 5434 (or whatever ports you have chosen in `.env`).
+
+4. Run the application with `npm run dev`. You can also (in another terminal) test the application with `npm test`.
 
 ### Using the Application
 
-The application contains a single POST `/signup` API endpoint that requires a valid email (with a maximum length of 30 characters) and a password (that must range from 2 to 20 characters). To sign up a user (and receive the ten hardcoded emails in random order), you can use the [frontend user interface](https://github.com/JessieFrance/cope-notes-frontend). Alternatively, you can use a tool like [Postman](https://www.postman.com/) or *cURL*.
+The application contains a single POST `/signup` API endpoint that requires a valid email (with a maximum length of 30 characters) and a password (that must range from 2 to 20 characters). To sign up a user (and receive the ten hardcoded emails in random order), you can use the [frontend user interface](https://github.com/JessieFrance/email-app-frontend). Alternatively, you can use a tool like [Postman](https://www.postman.com/) or *cURL*.
 
 
 #### Postman
@@ -62,7 +64,7 @@ curl --location --request POST 'localhost:5000/signup' \
 
 ### A Note on Receiving Emails
 
-Gmail and other email providers might mark the automated emails as spam. If you are not finding any emails in your inbox, please check the spam, promotions, or all emails folders. If you see any errors in the terminal about emails not sending, make sure you do not have a firewall blocking outgoing messages from the application on your machine.
+Gmail and other email providers might mark the automated emails as spam. If you are not finding any emails in your inbox (or are finding some but not others), please check the spam, promotions, or all emails folders. If you see any errors in the terminal about emails not sending, make sure you do not have a firewall blocking outgoing messages from the application on your machine.
 
 ### Important Note on Re-running the Application
 

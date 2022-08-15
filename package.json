@@ -1,7 +1,7 @@
 {
-  "name": "cope-notes-backend",
+  "name": "email-app",
   "version": "1.0.0",
-  "description": "The back end for the cope notes challenge",
+  "description": "The back end for an email scheduler app",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
